@@ -16,7 +16,7 @@ namespace SyncDataApp
             try
             {
                 System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
-                using (var stream = File.Open(@"D:\Program\ImportExcel-mainV2\Employee2.xlsx", FileMode.Open, FileAccess.Read))
+                using (var stream = File.Open(@"D:\Program\ImportExcel-mainV2\MSTEmployee.xlsx", FileMode.Open, FileAccess.Read))
                 {
                     using (var reader = ExcelReaderFactory.CreateReader(stream))
                     {
@@ -33,87 +33,28 @@ namespace SyncDataApp
                                 }
                                 if (currentTab == 1)
                                 {
-                                    //var DepartmentId = reader.GetValue(0);
-                                    //var DepartmentCode = reader.GetValue(1) != null ? reader.GetValue(1).ToString() : "";
-                                    //var NameTh = reader.GetValue(2) != null ? reader.GetValue(2).ToString() : "";
-                                    //var NameEn = reader.GetValue(3) != null ? reader.GetValue(3).ToString() : "";
-                                    //var CreatedDate = reader.GetValue(4) != null ? Convert.ToDateTime(reader.GetValue(4)) : default(DateTime);
-                                    //var CreatedBy = reader.GetValue(5) != null ? reader.GetValue(5).ToString() : "";
-                                    //var ModifiedDate = reader.GetValue(6) != null ? Convert.ToDateTime(reader.GetValue(6)) : default(DateTime);
-                                    //var ModifiedBy = reader.GetValue(7) != null ? reader.GetValue(7).ToString() : "";
-                                    //var IsActive = reader.GetValue(8) != null ? Convert.ToBoolean(reader.GetValue(8)) : false;
-                                    //var AccountId = reader.GetValue(9) != null ? Convert.ToInt32(reader.GetValue(9)) : 0;
-                                    //var CompanyCode = reader.GetValue(10) != null ? reader.GetValue(10).ToString() : "";
-                                    //var ParentId = reader.GetValue(11) != null ? Convert.ToInt32(reader.GetValue(11).ToString()) : 0;
-
-
-                                    var externalNameTh = reader.GetValue(0) != null ? reader.GetValue(0).ToString() : "";
-                                    var externalNameEn = reader.GetValue(1) != null ? reader.GetValue(1).ToString() : "";
-                                    var externalCode = reader.GetValue(2) != null ? reader.GetValue(2).ToString() : "";
-
-
-                                    
-                                    ManageDivition(new MSTDivision()
-                                    {
-                                        DivisionCode = externalCode,
-                                        NameTh = externalNameTh,
-                                        NameEn = externalNameEn,
-                                        CreatedDate = DateTime.Today,
-                                        CreatedBy = "Sytem",
-                                        ModifiedDate = DateTime.Today,
-                                        ModifiedBy = "Sytem",
-                                        IsActive = true,
-                                        AccountId = 1
-
-                                    });
-                                }
-                                else if (currentTab == 2)
-                                {
-
-                                    //var PositionLevelId = reader.GetValue(0);
-                                    //var NameTh = reader.GetValue(1) != null ? reader.GetValue(1).ToString() : "";
-                                    //var NameEn = reader.GetValue(2) != null ? reader.GetValue(2).ToString() : "";
-                                    //var PositionLevel = reader.GetValue(3) != null ? Convert.ToDecimal(reader.GetValue(3)) : 0.0m;
-                                    //var IsActive = reader.GetValue(4) != null ? Convert.ToBoolean(reader.GetValue(4)) : false;
-                                    //var CreatedDate = reader.GetValue(5) != null ? Convert.ToDateTime(reader.GetValue(5)) : default(DateTime);
-                                    //var CreatedBy = reader.GetValue(6) != null ? reader.GetValue(6).ToString() : "";
-                                    //var ModifiedDate = reader.GetValue(7) != null ? Convert.ToDateTime(reader.GetValue(7)) : default(DateTime);
-                                    //var ModifiedBy = reader.GetValue(8) != null ? reader.GetValue(8).ToString() : "";
-                                    //var AccountId = reader.GetValue(9) != null ? Convert.ToInt32(reader.GetValue(9).ToString()) : 0;
-
-                                    //ManagePositionLavel(new MSTPositionLevel()
-                                    //{
-                                    //    NameEn = NameEn,
-                                    //    NameTh = NameTh,
-                                    //    PositionLevel = PositionLevel,
-                                    //    IsActive = IsActive,
-                                    //    CreatedDate = CreatedDate,
-                                    //    CreatedBy = CreatedBy,
-                                    //    ModifiedDate = ModifiedDate,
-                                    //    ModifiedBy = ModifiedBy
-
-                                    //});
-
 
                                     var DepartmentCode = reader.GetValue(0) != null ? reader.GetValue(0).ToString() : "";
                                     var DepartmentTH = reader.GetValue(1) != null ? reader.GetValue(1).ToString() : "";
                                     var DepartmentEN = reader.GetValue(2) != null ? reader.GetValue(2).ToString() : "";
                                     var STATUS = reader.GetValue(3) != null ? reader.GetValue(3).ToString() : "";
-                                    var CompanyCode = reader.GetValue(4) != null ? reader.GetValue(4).ToString() : "";
+                                    var AccountId = reader.GetValue(4) != null ? Convert.ToInt32(reader.GetValue(4).ToString()) : 0;
+                                    var CodeCompany = reader.GetValue(5) != null ? reader.GetValue(5).ToString() : "";
+                                    var ParentId = reader.GetValue(6) != null ? reader.GetValue(6).ToString() : "";
 
                                     string[] keywordActive = { "true", "1", "Active" };
                                     string[] keywordNotActive = { "false", "0", "InActive" };
-                                     bool statusActive=false; 
+                                    bool statusActive = false;
                                     if (keywordActive.Contains(STATUS))
                                     {
-                                        statusActive =true;
+                                        statusActive = true;
                                     }
                                     else if (keywordNotActive.Contains(STATUS))
                                     {
-                                        statusActive =false;
+                                        statusActive = false;
                                     }
 
-                                    ManageDepartment(new MSTDepartment()
+                                    ManageDepartment(new DepartMentDto()
                                     {
                                         DepartmentCode = DepartmentCode,
                                         NameTh = DepartmentTH,
@@ -123,19 +64,67 @@ namespace SyncDataApp
                                         ModifiedDate = DateTime.Today,
                                         ModifiedBy = "System",
                                         IsActive = statusActive,
+                                        AccountId = AccountId,
+                                        CompanyCode = CodeCompany,
+                                        ParenName = ParentId
+                                    });
+
+
+                                }
+                                else if (currentTab == 2)
+                                {
+
+                                    var PosLvsTH = reader.GetValue(0) != null ? reader.GetValue(0).ToString() : "";
+                                    var PosLvsEN = reader.GetValue(1) != null ? reader.GetValue(1).ToString() : "";
+                                    var PosLvs = reader.GetValue(2) != null ? Convert.ToDecimal(reader.GetValue(2)) : 0.0m;
+                                    var STATUS = reader.GetValue(3) != null ? reader.GetValue(3).ToString() : "";
+
+                                    string[] keywordActive = { "true", "1", "Active" };
+                                    string[] keywordNotActive = { "false", "0", "InActive" };
+                                    bool statusActive = false;
+                                    if (keywordActive.Contains(STATUS))
+                                    {
+                                        statusActive = true;
+                                    }
+                                    else if (keywordNotActive.Contains(STATUS))
+                                    {
+                                        statusActive = false;
+                                    }
+
+
+                                    ManagePositionLavel(new MSTPositionLevel()
+                                    {
+                                        CreatedDate = DateTime.Today,
+                                        CreatedBy = "System",
+                                        ModifiedDate = DateTime.Today,
+                                        ModifiedBy = "System",
                                         AccountId = 1,
-                                        CompanyCode = CompanyCode,
-                                        ParentId = null
+                                        NameEn = PosLvsEN,
+                                        NameTh = PosLvsTH,
+                                        PositionLevel = PosLvs,
+                                        IsActive = statusActive
+
                                     });
                                 }
 
                                 else if (currentTab == 3)
                                 {
-                                    var PosLvsTH = reader.GetValue(0) != null ? reader.GetValue(0).ToString() : "";
-                                    var PosLvsEN = reader.GetValue(1) != null ? reader.GetValue(1).ToString() : "";
-                                    var PositionLevelId = reader.GetValue(2) != null ? Convert.ToDecimal(reader.GetValue(2)) : 0.0m;
-                                    var STATUS = reader.GetValue(3) != null ? reader.GetValue(3).ToString() : "";
-                                   
+
+                                    var WORK_ID = reader.GetValue(0) != null ? reader.GetValue(0).ToString() : "";
+                                    var Username = reader.GetValue(1) != null ? reader.GetValue(1).ToString() : "";
+                                    var FULL_NAME_TH = reader.GetValue(2) != null ? reader.GetValue(2).ToString() : "";
+                                    var FULL_NAME_EN = reader.GetValue(3) != null ? reader.GetValue(3).ToString() : "";
+                                    var LOGIN_EMAIL2 = reader.GetValue(4) != null ? reader.GetValue(4).ToString() : "";
+                                    var STATUS = reader.GetValue(5) != null ? reader.GetValue(5).ToString() : "";
+                                    var PositionNameEN = reader.GetValue(6) != null ? reader.GetValue(6).ToString() : "";
+                                    var PositionNameTH = reader.GetValue(7) != null ? reader.GetValue(7).ToString() : "";
+                                    var PosLvsEN = reader.GetValue(8) != null ? reader.GetValue(8).ToString() : "";
+                                    var DeptCode = reader.GetValue(9) != null ? reader.GetValue(9).ToString() : "";
+                                    var Positionid = reader.GetValue(10) != null ? reader.GetValue(10).ToString() : "";
+                                    var REPORT_TO = reader.GetValue(11) != null ? reader.GetValue(11).ToString() : "";
+                                    var DefaultEN = reader.GetValue(12) != null ? reader.GetValue(12).ToString() : "";
+                                    var NumberPhone = reader.GetValue(13) != null ? reader.GetValue(13).ToString() : "";
+
                                     string[] keywordActive = { "true", "1", "Active" };
                                     string[] keywordNotActive = { "false", "0", "InActive" };
                                     bool statusActive = false;
@@ -156,132 +145,50 @@ namespace SyncDataApp
                                         ModifiedBy = "System",
                                         AccountId = 1,
                                         NameEn = PosLvsEN,
-                                        NameTh = PosLvsTH,
-                                        PositionLevel = PositionLevelId,
+                                        NameTh = PosLvsEN,
                                         IsActive = statusActive
 
                                     });
 
-
-
-                                }
-
-                                else if (currentTab == 4)
-                                {
-                                    var positionNameTH = reader.GetValue(0) != null ? reader.GetValue(0).ToString() : "";
-                                    var positionNameEN = reader.GetValue(1) != null ? reader.GetValue(1).ToString() : "";
-                                    var positionLavelId = reader.GetValue(2) != null ? Convert.ToInt32(reader.GetValue(2).ToString()) : 0;
-                                    var STATUS = reader.GetValue(3) != null ? reader.GetValue(3).ToString() : "";
-
-                                    string[] keywordActive = { "true", "1", "Active" };
-                                    string[] keywordNotActive = { "false", "0", "InActive" };
-                                    bool statusActive = false;
-                                    if (keywordActive.Contains(STATUS))
+                                    ManagePosition(new PositionLavelDto()
                                     {
-                                        statusActive = true;
-                                    }
-                                    else if (keywordNotActive.Contains(STATUS))
-                                    {
-                                        statusActive = false;
-                                    }
-
-                                    ManagePosition(new MSTPosition()
-                                    {
-                                        NameEn = positionNameEN,
-                                        NameTh = positionNameTH,
-                                        PositionLevelId = positionLavelId,
+                                        NameEn = PositionNameEN,
+                                        NameTh = PositionNameTH,
                                         IsActive = statusActive,
+                                        PositionLvsName = PosLvsEN,
+                                        CompanyCode = Positionid,
                                         CreatedDate = DateTime.Today,
                                         CreatedBy = "System",
                                         ModifiedDate = DateTime.Today,
                                         ModifiedBy = "System",
                                         AccountId = 1,
-
                                     });
-                                }
-
-                                else if (currentTab == 5)
-                                {
-                                    //var EmployeeId = reader.GetValue(0);
-                                    //var EmployeeCode = reader.GetValue(1) != null ? reader.GetValue(1).ToString() : "";
-                                    //var Username = reader.GetValue(2) != null ? reader.GetValue(2).ToString() : "";
-                                    //var NameTh = reader.GetValue(3) != null ? reader.GetValue(3).ToString() : "";
-                                    //var NameEn = reader.GetValue(4) != null ? reader.GetValue(4).ToString() : "";
-                                    //var Email = reader.GetValue(5) != null ? reader.GetValue(5).ToString() : "";
-                                    //var IsActive = reader.GetValue(6) != null ? Convert.ToBoolean(reader.GetValue(6)) : false;
-                                    //var PositionId = reader.GetValue(7) != null ? Convert.ToInt32(reader.GetValue(7).ToString()) : 0;
-                                    ////var PositionLevelId = reader.GetValue(8) != null ? Convert.ToInt32(reader.GetValue(8).ToString()) : 0;
-                                    //var DepartmentId = reader.GetValue(9) != null ? Convert.ToInt32(reader.GetValue(9).ToString()) : 0;
-                                    //var ReportToEmpCode = reader.GetValue(10) != null ? reader.GetValue(10).ToString() : "";
-                                    //var Lang = reader.GetValue(11) != null ? reader.GetValue(11).ToString() : "";
-                                    //var AccountId = reader.GetValue(12) != null ? Convert.ToInt32(reader.GetValue(12).ToString()) : 0;
-                                    //var CreatedDate = reader.GetValue(13) != null ? Convert.ToDateTime(reader.GetValue(13)) : default(DateTime);
-                                    //var CreatedBy = reader.GetValue(14) != null ? reader.GetValue(14).ToString() : "";
-                                    //var ModifiedDate = reader.GetValue(15) != null ? Convert.ToDateTime(reader.GetValue(15)) : default(DateTime);
-                                    //var ModifiedBy = reader.GetValue(16) != null ? reader.GetValue(16).ToString() : "";
-                                    //var DivisionId = reader.GetValue(17) != null ? Convert.ToInt32(reader.GetValue(17).ToString()) : 0;
-                                    //// var CompanyCode = reader.GetValue(18) != null ? reader.GetValue(18).ToString() : "";
-                                    ///
-                                    var WORK_ID = reader.GetValue(0) != null ? reader.GetValue(0).ToString() : "";
-                                    var FULL_NAME_TH = reader.GetValue(1) != null ? reader.GetValue(1).ToString() : "";
-                                    var FULL_NAME_EN = reader.GetValue(2) != null ? reader.GetValue(2).ToString() : "";
-                                    var LOGIN_EMAIL = reader.GetValue(3) != null ? reader.GetValue(3).ToString() : "";
-                                    var STATUS = reader.GetValue(4) != null ? reader.GetValue(4).ToString() : "";
-                                    //var PositionNameTH = reader.GetValue(5) != null ? reader.GetValue(5).ToString() : "";
-                                    var PositionNameEn = reader.GetValue(5) != null ? reader.GetValue(5).ToString() : "";
-                                    var DepartmentCode = reader.GetValue(6) != null ? reader.GetValue(6).ToString() : "";
-                                    var REPORT_TO = reader.GetValue(7) != null ? reader.GetValue(7).ToString() : "";
-                                    var user = reader.GetValue(3) != null ? reader.GetValue(3).ToString() : "";
-                                    //!= null ? Convert.ToInt32(reader.GetValue(7).ToString()) : 0;
-                                    // != null ? Convert.ToBoolean(reader.GetValue(4)) : false;
-
-
-                                    
-
-                                    string[] UserLogin = user.Split(' ', '@');
-                                    string[] keywordActive = { "true", "1", "Active" };
-                                    string[] keywordNotActive = { "false", "0", "InActive" };
-                                    bool statusActive = false;
-                                    if (keywordActive.Contains(STATUS))
-                                    {
-                                        statusActive = true;
-                                    }
-                                    else if (keywordNotActive.Contains(STATUS))
-                                    {
-                                        statusActive = false;
-                                    }
-
-
 
                                     ManageEmployee(new EmployeeDto()
-                                        {
+                                    {
 
-                                            EmployeeCode = WORK_ID,
-                                            Username = UserLogin[0],
-                                            NameTh = FULL_NAME_TH,
-                                            NameEn = FULL_NAME_TH,
-                                            Email = LOGIN_EMAIL,
-                                            IsActive = statusActive,
-                                            ReportToEmpCode = REPORT_TO,
-                                            PositionNameEn = PositionNameEn,
-                                           // PositionNameTH = PositionNameTH,
-                                            DepartmentCode = DepartmentCode,
-                                            CreatedDate = DateTime.Today,
-                                            CreatedBy = "System",
-                                            ModifiedDate = DateTime.Today,
-                                            ModifiedBy = "System",
-                                            AccountId = 1,
-                                            Lang = "EN"
+                                        EmployeeCode = WORK_ID,
+                                        Username = Username,
+                                        NameTh = FULL_NAME_TH,
+                                        NameEn = FULL_NAME_TH,
+                                        Email = LOGIN_EMAIL2,
+                                        IsActive = statusActive,
+                                        ReportToEmpCode = REPORT_TO,
+                                        PositionNameEn = PositionNameEN,
+                                        PositionNameTH = PositionNameTH,
+                                        DepartmentCode = DeptCode,
+                                        EmpLevel = PosLvsEN,
+                                        CreatedDate = DateTime.Today,
+                                        CreatedBy = "System",
+                                        ModifiedDate = DateTime.Today,
+                                        ModifiedBy = "System",
+                                        AccountId = 1,
+                                        Lang = "EN"
 
+                                    });
 
-
-                                        });
                                 }
 
-
-
-
-                                
                             }
                             currentTab += 1;
                         } while (
@@ -305,71 +212,67 @@ namespace SyncDataApp
             }
 
         }
-        //static string validateStatus(string status)
+
+
+        //static void ManageDivition(MSTDivision division)
         //{
-        //    string[] keywordActive = { "true", "1", "active" };
-        //    string[] keywordNotActive = { "false", "0", "inactive" };
+        //    var data = db.MSTDivisions.FirstOrDefault(a => a.DivisionCode.Equals(division.DivisionCode));
+        //    if (data == null)
+        //    {
+        //        db.MSTDivisions.Add(division);
+        //    }
+        //    else
+        //    {
+        //        data.NameEn = division.NameEn;
+        //        data.NameEn = division.NameTh;
+        //        data.DivisionCode = division.DivisionCode;
+        //        data.CreatedDate = division.CreatedDate;
+        //        data.CreatedBy = division.CreatedBy;
+        //        data.ModifiedDate = division.ModifiedDate;
+        //        data.ModifiedBy = division.ModifiedBy;
+        //        data.IsActive = division.IsActive;
+        //        data.AccountId = division.AccountId;
 
-        //    if (keywordActive.Contains(status))
-        //    {
-        //        return "Active";
+
         //    }
-        //    else if (keywordNotActive.Contains(status))
-        //    {
-        //        return "InActive";
-        //    }
-        //    return "Error";
+
         //}
-
-
-        static void ManageDivition(MSTDivision division)
+        static void ManageDepartment(DepartMentDto departmentDto)
         {
-            var data = db.MSTDivisions.FirstOrDefault(a => a.DivisionCode.Equals(division.DivisionCode));
-            if (data == null)
-            {
-                db.MSTDivisions.Add(division);
-            }
-            else
-            {
-                data.NameEn = division.NameEn;
-                data.NameEn = division.NameTh;
-                data.DivisionCode = division.DivisionCode;
-                data.CreatedDate = division.CreatedDate;
-                data.CreatedBy = division.CreatedBy;
-                data.ModifiedDate = division.ModifiedDate;
-                data.ModifiedBy = division.ModifiedBy;
-                data.IsActive = division.IsActive;
-                data.AccountId = division.AccountId;
-
-
-            }
-
-        }
-        static void ManageDepartment(MSTDepartment department)
-        {
-            var data = db.MSTDepartments.FirstOrDefault(a => a.DepartmentCode.Equals(department.DepartmentCode));
-
-            //var datadivitions = db.MSTDivisions.FirstOrDefault(d => d.NameEn.Equals(department.NameEn));
-            //var datadivisionid = db.MSTDivisions.FirstOrDefault(i=>i.DivisionId.Equals())
+            var data = db.MSTDepartments.FirstOrDefault(a => a.DepartmentCode.Equals(departmentDto.DepartmentCode));
+            //var paren = db.MSTDepartments.FirstOrDefault(a => a.DepartmentCode.Contains(departmentDto.ParenName));
 
             if (data == null)
             {
-                db.MSTDepartments.Add(department);
+                db.MSTDepartments.Add(new MSTDepartment()
+                {
+                    DepartmentCode = departmentDto.DepartmentCode,
+                    NameTh = departmentDto.NameTh,
+                    NameEn = departmentDto.NameEn,
+                    CreatedDate = departmentDto.CreatedDate,
+                    CreatedBy = departmentDto.CreatedBy,
+                    ModifiedDate = departmentDto.ModifiedDate,
+                    ModifiedBy = departmentDto.ModifiedBy,
+                    IsActive = departmentDto.IsActive,
+                    AccountId = departmentDto.AccountId,
+                    CompanyCode = departmentDto.CompanyCode,
+                    // ParentId = departmentDto.ParentId
+                });
             }
             else
             {
-              
-                data.DepartmentCode = department.DepartmentCode;
-                data.NameTh = department.NameTh;
-                data.NameEn = department.NameEn;
-                data.CreatedDate = department.CreatedDate;
-                data.CreatedBy = department.CreatedBy;
-                data.ModifiedDate = department.ModifiedDate;
-                data.ModifiedBy = department.ModifiedBy;
-                data.IsActive = department.IsActive;
-                data.AccountId = department.AccountId;
-                data.CompanyCode = department.CompanyCode;
-                data.ParentId = department.ParentId;
+
+                data.DepartmentCode = departmentDto.DepartmentCode;
+                data.NameTh = departmentDto.NameTh;
+                data.NameEn = departmentDto.NameEn;
+                data.CreatedDate = departmentDto.CreatedDate;
+                data.CreatedBy = departmentDto.CreatedBy;
+                data.ModifiedDate = departmentDto.ModifiedDate;
+                data.ModifiedBy = departmentDto.ModifiedBy;
+                data.IsActive = departmentDto.IsActive;
+                data.AccountId = departmentDto.AccountId;
+                data.CompanyCode = departmentDto.CompanyCode;
+                // data.ParentId = departmentDto.ParentId;
             }
             db.SaveChanges();
         }
@@ -397,27 +300,45 @@ namespace SyncDataApp
 
         }
 
-        static void ManagePosition(MSTPosition mSTPosition)
+        static void ManagePosition(PositionLavelDto positionDto)
         {
 
-            var data = db.MSTPositions.FirstOrDefault(a => a.NameEn.Equals(mSTPosition.NameEn));
-           
+            var data = db.MSTPositions.FirstOrDefault(a => a.NameEn.Equals(positionDto.NameEn));
+            var positionLvs = db.MSTPositionLevels.FirstOrDefault(a => a.NameEn.Contains(positionDto.PositionLvsName));
 
-            if (data == null )
+
+
+            if (data == null)
             {
-                
-                db.MSTPositions.Add(mSTPosition);
+                db.MSTPositions.Add(new MSTPosition()
+                {
+                    NameEn = positionDto.NameEn,
+                    NameTh = positionDto.NameTh,
+                    PositionLevelId = positionLvs.PositionLevelId,
+                    IsActive = positionDto.IsActive,
+                    CreatedDate = positionDto.CreatedDate,
+                    CreatedBy = positionDto.CreatedBy,
+                    ModifiedDate = positionDto.ModifiedDate,
+                    ModifiedBy = positionDto.ModifiedBy,
+                    AccountId = positionDto.AccountId,
+                    CompanyCode = positionDto.CompanyCode,
+
+                });
+
+
             }
             else
             {
-                data.NameTh = mSTPosition.NameTh;
-                data.NameEn = mSTPosition.NameEn;
-                data.PositionLevelId = mSTPosition.PositionLevelId;
-                data.IsActive = mSTPosition.IsActive;
-                data.CreatedBy = mSTPosition.CreatedBy;
-                data.ModifiedDate = mSTPosition.ModifiedDate;
-                data.ModifiedBy = mSTPosition.ModifiedBy;
-                data.AccountId = mSTPosition.AccountId;
+                data.NameEn = positionDto.NameEn;
+                data.NameTh = positionDto.NameTh;
+                data.PositionLevelId = positionLvs.PositionLevelId;
+                data.IsActive = positionDto.IsActive;
+                data.CreatedDate = positionDto.CreatedDate;
+                data.CreatedBy = positionDto.CreatedBy;
+                data.ModifiedDate = positionDto.ModifiedDate;
+                data.ModifiedBy = positionDto.ModifiedBy;
+                data.AccountId = positionDto.AccountId;
+                data.CompanyCode = positionDto.CompanyCode;
 
             }
             db.SaveChanges();
@@ -426,24 +347,21 @@ namespace SyncDataApp
         static void ManageEmployee(EmployeeDto employeeDto)
         {
             var data = db.MSTEmployees.FirstOrDefault(a => a.EmployeeCode.Equals(employeeDto.EmployeeCode));
-            
+
             var position = db.MSTPositions.FirstOrDefault(p => p.NameEn.Contains(employeeDto.PositionNameEn));
             var departmentcode = db.MSTDepartments.FirstOrDefault(d => d.DepartmentCode.Contains(employeeDto.DepartmentCode));
 
-
-            
             if (data == null)
             {
                 db.MSTEmployees.Add(new MSTEmployee
                 {
-                    EmpLevel=employeeDto.EmpLevel,
+                    EmpLevel = employeeDto.EmpLevel,
                     EmployeeCode = employeeDto.EmployeeCode,
                     Username = employeeDto.Username,
                     NameTh = employeeDto.NameTh,
                     NameEn = employeeDto.NameEn,
                     Email = employeeDto.Email,
                     IsActive = employeeDto.IsActive,
-                    EmployeeLevel = employeeDto.EmployeeLevel,
                     ReportToEmpCode = employeeDto.ReportToEmpCode,
                     PositionId = position.PositionId,
                     DepartmentId = departmentcode.DepartmentId,
@@ -453,29 +371,27 @@ namespace SyncDataApp
                     ModifiedBy = "System",
                     AccountId = 1,
                     Lang = "EN"
-                }); ;
+                }); 
             }
             else
             {
 
+                data.EmpLevel = employeeDto.EmpLevel;
                 data.EmployeeCode = employeeDto.EmployeeCode;
                 data.Username = employeeDto.Username;
                 data.NameTh = employeeDto.NameTh;
                 data.NameEn = employeeDto.NameEn;
                 data.Email = employeeDto.Email;
                 data.IsActive = employeeDto.IsActive;
-                data.DepartmentId = employeeDto.DepartmentId;
                 data.ReportToEmpCode = employeeDto.ReportToEmpCode;
-                data.Lang = "EN";
-                data.AccountId = employeeDto.AccountId;
-                data.CreatedDate = employeeDto.CreatedDate;
-                data.CreatedBy = employeeDto.CreatedBy;
-                data.ModifiedDate = employeeDto.ModifiedDate;
-                data.ModifiedBy = employeeDto.ModifiedBy;
-                data.DivisionId = employeeDto.DivisionId;
                 data.PositionId = position.PositionId;
                 data.DepartmentId = departmentcode.DepartmentId;
-                data.EmpLevel = employeeDto.EmpLevel;
+                data.CreatedDate = DateTime.Today;
+                data.CreatedBy = "System";
+                data.ModifiedDate = DateTime.Today;
+                data.ModifiedBy = "System";
+                data.AccountId = 1;
+                data.Lang = "EN";
 
             }
             db.SaveChanges();
